@@ -13,9 +13,11 @@ const Routes = (app) => {
         res.end('Invalid Endpoint\n');
     })
 
+    app.get('/api/getlabels/:projectId', new TrackerController().getLabelsInProject);
+    app.get('/api/project/:projectId/label/:queryName', new TrackerController().getLabelByName);
     app.get('/api/config/:projectId', ConfigController.getConfiguration);
     app.post('/api/updateconfig', ConfigController.saveConfiguration);
-    app.post('/api/pt/hook', TrackerController.onTrackerEvent);
+    app.post('/api/pt/hook', new TrackerController().onTrackerEvent);
 }
 
 export default Routes;
