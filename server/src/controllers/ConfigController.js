@@ -1,4 +1,4 @@
-import db from '../databaseHandler';
+import db from '../db/databaseHandler';
 
 const ConfigController = {
     async getConfiguration(req, res) {

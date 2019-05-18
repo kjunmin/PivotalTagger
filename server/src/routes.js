@@ -1,5 +1,6 @@
 import ConfigController from "./controllers/ConfigController";
 import TrackerController from "./controllers/TrackerController";
+import { createAllTables } from './db/dbCreateScripts';
 
 const Routes = (app) => {
     app.use(function(req, res, next) {
@@ -13,9 +14,12 @@ const Routes = (app) => {
         res.end('Invalid Endpoint\n');
     })
 
+    app.get('/api/createtables', createAllTables);
+    app.get('/api/getsprint/project/:projectId/', new TrackerController().getLatestSprint);
+
     app.get('/api/getlabels/:projectId', new TrackerController().getLabelsInProject);
     app.get('/api/project/:projectId/label/:queryName', new TrackerController().getLabelByName);
-    app.get('/api/config/:projectId', ConfigController.getConfiguration);
+    app.get('/api/config/project/:projectId', ConfigController.getConfiguration);
     app.post('/api/updateconfig', ConfigController.saveConfiguration);
     app.post('/api/pt/hook', new TrackerController().onTrackerEvent);
 }
