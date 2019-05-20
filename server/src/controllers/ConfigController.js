@@ -11,6 +11,7 @@ const ConfigController = {
         const configJson = req.body;
         console.log(configJson);
         const output = await db.updateConfiguration(configJson);
+        const output2 = await db.saveHistory(configJson);
         res.send(output);
     },
 

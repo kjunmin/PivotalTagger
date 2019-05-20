@@ -19,20 +19,28 @@ const db = {
     async getLatestSprintInfo(projectId) {
         const queryText = `SELECT * FROM ${dbConstants.HISTORY_TABLE} WHERE project_id = '${projectId}' ORDER BY sprint_no ASC;`;
         const res = await pool.query(queryText);
-        return { status: 1, text: "Data retrieved!", data: res.rows[0] }
+        return { status: 1, text: "Data retrieved!", data: res.rows[0] };
     },
 
     async getHistory(projectId, sprintNo) {
         const queryText = `SELECT * FROM ${dbConstants.HISTORY_TABLE} WHERE sprint_no = '${sprintNo}' AND project_id = '${projectId}';`;
         const res = await pool.query(queryText);
-        return { status: 1, text: "Data retrieved!", data: res.rows[0] }
+        return { status: 1, text: "Data retrieved!", data: res.rows[0] };
     },
 
     async updateHistory(historyJson) {
         const queryText = `INSERT INTO public."${dbConstants.HISTORY_TABLE}"(sprint_no, project_id, sprint_start_date, release_date, review_date)
                             VALUES('${historyJson.sprintNo}', '${historyJson.projectId}', '${historyJson.sprintStartDate}', '${historyJson.releaseDate}', '${historyJson.reviewDate}')`
         const res = await pool.query(queryText);
-        return { status: 1, text: "History Updated!", data: null }
+        return { status: 1, text: "History Updated!", data: null };
+    },
+
+    async saveHistory(historyJson) {
+        const queryText = `UPDATE ${dbConstants.HISTORY_TABLE} SET release_date = '${historyJson.releaseDate}', review_date = '${historyJson.reviewDate}' 
+                            WHERE sprint_no = '${historyJson.sprintNo}' AND project_id = '${historyJson.projectId}'; `;
+        console.log(queryText);
+        const res = await pool.query(queryText);
+        return { status: 1, text: "Dates updated!", data: null };
     },
 
     async updateConfiguration(configJson) {
@@ -42,7 +50,6 @@ const db = {
                             ON CONFLICT (project_id) DO UPDATE
                             SET (release_tagging, review_tagging, feature_tagging, chore_tagging, bugfix_tagging) = ('${configJson.isReleaseTaggingEnabled}', '${configJson.isReviewTaggingEnabled}',
                             '${configJson.isFeatureTaggingEnabled}', '${configJson.isChoreTaggingEnabled}', '${configJson.isBugfixTaggingEnabled}');`;
-        console.log(queryText);
         const res = await pool.query(queryText);
         return { status: 1, text: "Configuration Saved!", data: null };
     },
@@ -50,7 +57,6 @@ const db = {
     async getConfiguration(projectId) {
         const queryText = `SELECT project_id, release_tagging, review_tagging, feature_tagging, chore_tagging, bugfix_tagging FROM
                         ${dbConstants.CONFIGURATION_TABLE} WHERE project_id = '${projectId}'`;
-        console.log(queryText);
         const res = await pool.query(queryText);
         return { status: 1, text: null, data: res.rows[0] };
     }
