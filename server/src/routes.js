@@ -14,7 +14,7 @@ const Routes = (app) => {
         res.end('Invalid Endpoint\n');
     })
 
-    app.get('/api/createtables', createAllTables);
+    app.get('/api/createtables', (req, res) => {createAllTables; res.send("Tables created")});
     app.get('/api/getsprint/project/:projectId/', new TrackerController().getLatestSprint);
 
     app.get('/api/getlabels/:projectId', new TrackerController().getLabelsInProject);

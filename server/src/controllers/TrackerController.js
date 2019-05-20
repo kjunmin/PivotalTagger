@@ -24,6 +24,9 @@ class TrackerController {
 
     async onTrackerEvent(req, res) {
         const trackerData = req.body;
+        let projectId = 0;
+        let sprintNo = 0;
+        const config = await db.getConfigurations();
         console.log(body);
         res.send("request received")
     }

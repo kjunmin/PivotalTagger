@@ -17,7 +17,7 @@ pool.on('connect', () => {
 
 const db = {
     async getLatestSprintInfo(projectId) {
-        const queryText = `SELECT * FROM ${dbConstants.HISTORY_TABLE} WHERE project_id = '${projectId}' ORDER BY sprint_no ASC;`;
+        const queryText = `SELECT * FROM ${dbConstants.HISTORY_TABLE} WHERE project_id = '${projectId}' ORDER BY sprint_no DESC;`;
         const res = await pool.query(queryText);
         return { status: 1, text: "Data retrieved!", data: res.rows[0] };
     },
@@ -57,6 +57,12 @@ const db = {
     async getConfiguration(projectId) {
         const queryText = `SELECT project_id, release_tagging, review_tagging, feature_tagging, chore_tagging, bugfix_tagging FROM
                         ${dbConstants.CONFIGURATION_TABLE} WHERE project_id = '${projectId}'`;
+        const res = await pool.query(queryText);
+        return { status: 1, text: null, data: res.rows[0] };
+    },
+
+    async getConfigurations(projectId, sprintNo) {
+        const queryText = `SELECT * FROM ${dbConstants.PT_VIEW} WHERE project_id = '${projectId}' ORDER BY sprint_no DESC;`;
         const res = await pool.query(queryText);
         return { status: 1, text: null, data: res.rows[0] };
     }

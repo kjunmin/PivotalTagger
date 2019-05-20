@@ -22,9 +22,9 @@ const createHistoryTable = async() => {
                 id SERIAL PRIMARY KEY,
                 sprint_no INT NOT NULL,
                 project_id INT NOT NULL,
-                sprint_start_date TIMESTAMP,
-                release_date TIMESTAMP,
-                review_date TIMESTAMP
+                sprint_start_date DATE,
+                release_date DATE,
+                review_date DATE
             );`
     await pool.query(queryText);
 }
