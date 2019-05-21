@@ -67,8 +67,23 @@ const createPTView = async() => {
 const seedHistoryTable = async() => {
     const queryText = 
         `INSERT INTO ${dbConstants.HISTORY_TABLE}(sprint_no, project_id, sprint_start_date, release_date, review_date)
-            VALUES(27, 2345186, TIMESTAMP '2019-05-21 00:00:00', TIMESTAMP '2019-05-30 00:00:00', TIMESTAMP '2019-06-04 00:00:00')`;
+            VALUES(28, 2345186, TIMESTAMP '2019-05-21 00:00:00', TIMESTAMP '2019-05-30 00:00:00', TIMESTAMP '2019-06-04 00:00:00')`;
     await pool.query(queryText);
+}
+
+const deleteHistoryTable = async() => {
+    const queryText = `DROP CASCADE TABLE ${dbConstants.HISTORY_TABLE}`;
+    await pool.query(queryText);
+}
+
+const deleteConfigTable = async() => {
+    const queryText = `DROP CASCADE ${dbConstants.CONFIGURATION_TABLE};`;
+    await pool.query(queryText);
+}
+
+export const dropAllTables = async() => {
+    await deleteConfigTable();
+    await deleteHistoryTable();
 }
 
 export const createAllTables = async() => {

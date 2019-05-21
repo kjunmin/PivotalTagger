@@ -1,6 +1,7 @@
 import Config from "../constants/config";
 import LabelUtil from "../utils/LabelUtil";
 import db from "../db/databaseHandler";
+import PtUtil from "../utils/PtUtil";
 
 class TrackerController {
     constructor() {
@@ -15,6 +16,13 @@ class TrackerController {
         res.send(output);
     }
 
+    async getConfigurations(req, res) {
+        let projectId = req.params.projectId;
+        let config = await db.getConfigurations(projectId);
+        let output = JSON.stringify(config.data);
+        res.send(output);
+    }
+
     async getHistoryDate(req, res) {
         const projectId = req.params.projectId;
         const sprintNo = req.params.sprintNo;
@@ -23,11 +31,32 @@ class TrackerController {
     }
 
     async onTrackerEvent(req, res) {
-        const trackerData = req.body;
-        let projectId = 0;
-        let sprintNo = 0;
-        const config = await db.getConfigurations();
-        console.log(body);
+        
+        const storyJson = req.body;
+        
+        const storyId = storyJson.primary_resources[0].id;
+        const projectId = storyJson.project.id;
+        let storyType = storyJson.primary_resources[0].story_type;
+        console.log("story type: " + storyType);
+        let config = await db.getConfigurations(projectId);
+        console.log("config: " + config.data);
+        let enableTag = false;
+        const state = storyJson.highlight;
+        switch(storyType) {
+            case 'feature': 
+                enableTag = config.data.feature_tagging;
+                break;
+            case 'chore':
+                enableTag = config.data.chore_tagging;
+                break;
+            case 'bug':
+                enableTag = config.data.bugfix_tagging;
+                break;
+        }
+        if (enableTag && state == 'finished') {
+            console.log('tagging');
+            await PtUtil.updateStory(storyId, projectId, config.data.release_date);
+        }
         res.send("request received")
     }
 

@@ -61,7 +61,7 @@ const db = {
         return { status: 1, text: null, data: res.rows[0] };
     },
 
-    async getConfigurations(projectId, sprintNo) {
+    async getConfigurations(projectId) {
         const queryText = `SELECT * FROM ${dbConstants.PT_VIEW} WHERE project_id = '${projectId}' ORDER BY sprint_no DESC;`;
         const res = await pool.query(queryText);
         return { status: 1, text: null, data: res.rows[0] };
