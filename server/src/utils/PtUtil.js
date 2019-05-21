@@ -2,9 +2,9 @@ import Config from "../constants/config";
 import fetch from 'node-fetch';
 
 const PtUtil = {
-    async updateStory(storyId, projectId, date) {
+    async updateStory(storyType, storyId, projectId, date) {
         // let storyDetails = await PtUtil.getStoryById(storyId, projectId);
-        PtUtil.tagReleaseLabel(storyId, projectId, date);
+        PtUtil.tagLabel(storyType, storyId, projectId, date);
     },
 
     async getStoryById(storyId, projectId) {
@@ -32,17 +32,7 @@ const PtUtil = {
         return labels;
     },
 
-    doesReleaseLabelExist(labels) {
-        let isExists = false;
-        labels.forEach(label => {
-            if (label.name.includes("release")) {
-                isExists = true;
-            }
-        });
-        return isExists;
-    },
-
-    tagReleaseLabel(storyId, projectId, date) {
+    tagLabel(labelType, storyId, projectId, date) {
         let url = Config.PT_BASE_URL;
         url += `/projects/`;
         url += projectId;
@@ -55,7 +45,7 @@ const PtUtil = {
         let dateStr = PtUtil.formatDate(date);
 
         let body = {
-            name: dateStr
+            name: `${dateStr} ${labelType}`
         }
 
         fetch(url, { 
@@ -76,7 +66,7 @@ const PtUtil = {
         let month = (d.getMonth() + 1).toString();
         let year = d.getFullYear().toString();
         let day = d.getDate().toString();
-        return `${year}-${month.padStart(2, 0)}-${day.padStart(2, 0)} release`;
+        return `${year}-${month.padStart(2, 0)}-${day.padStart(2, 0)}`;
     }
 }
 

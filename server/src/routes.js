@@ -19,8 +19,8 @@ const Routes = (app) => {
     app.get('/api/getsprint/project/:projectId/', new TrackerController().getLatestSprint);
 
     app.get('/api/project/:projectId/getconfig', new TrackerController().getConfigurations);
-    app.get('/api/getlabels/:projectId', new TrackerController().getLabelsInProject);
-    app.get('/api/project/:projectId/label/:queryName', new TrackerController().getLabelByName);
+    // app.get('/api/getlabels/:projectId', new TrackerController().getLabelsInProject);
+    // app.get('/api/project/:projectId/label/:queryName', new TrackerController().getLabelByName);
     app.get('/api/config/project/:projectId', ConfigController.getConfiguration);
     app.post('/api/updateconfig', ConfigController.saveConfiguration);
     app.post('/api/pt/hook', new TrackerController().onTrackerEvent);
