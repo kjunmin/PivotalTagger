@@ -37,11 +37,12 @@ class TrackerController {
         const storyId = storyJson.primary_resources[0].id;
         const projectId = storyJson.project.id;
         let storyType = storyJson.primary_resources[0].story_type;
-        console.log("story type: " + storyType);
-        let config = await db.getConfigurations(projectId);
         const state = storyJson.highlight;
-        console.log("config: " + config.data);
-        await new LabelUtil().tagStoryWithLabel(state, storyId, projectId, config.data);
+        console.log("story type: " + storyType);
+        console.log("story state: " + state);
+        let config = await db.getConfigurations(projectId);
+        
+        await this.labelUtil.tagStoryWithLabel(state, storyType, storyId, projectId, config.data);
         res.send("request received")
     }
 

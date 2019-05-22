@@ -2,9 +2,9 @@ import Config from "../constants/config";
 import fetch from 'node-fetch';
 
 const PtUtil = {
-    async updateStory(storyType, storyId, projectId, date) {
+    async updateStory(labelType, storyId, projectId, date) {
         // let storyDetails = await PtUtil.getStoryById(storyId, projectId);
-        PtUtil.tagLabel(storyType, storyId, projectId, date);
+        PtUtil.tagLabel(labelType, storyId, projectId, date);
     },
 
     async getStoryById(storyId, projectId) {
@@ -13,11 +13,9 @@ const PtUtil = {
         url += projectId;
         url += "/stories/";
         url += storyId;
-        console.log(url);
-        console.log(Config.PT_DEV_API_TOKEN);
 
         let storyDetails = await fetch(url, { method: "get", headers: {
-                'X-TrackerToken': Config.PT_DEV_API_TOKEN,
+                'X-TrackerToken': Config.PT_API_TOKEN,
                 'Content-Type': 'application/json'
             }})
             .then(res => res.json())
@@ -52,7 +50,7 @@ const PtUtil = {
             method: "post", 
             body: JSON.stringify(body),
             headers: {
-                'X-TrackerToken': Config.PT_DEV_API_TOKEN,
+                'X-TrackerToken': Config.PT_API_TOKEN,
                 'Content-Type': 'application/json'
             }})
             .then(res => res.json())

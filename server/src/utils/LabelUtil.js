@@ -22,10 +22,10 @@ class LabelUtil {
         })
     }
 
-    async tagStoryWithLabel(state, storyId, projectId, config) {
-        let isStoryTypeTaggable = false;
-
-        if (state == PTConstants.STORY_STATE.FINISHED) {
+    async tagStoryWithLabel(state, storyType, storyId, projectId, config) {
+        
+        if (state == PTConstants.STORY_STATE.FINISHED || state == PTConstants.STORY_STATE.ACCEPTED) {
+            let isStoryTypeTaggable = false;
             switch(storyType) {
                 case PTConstants.STORY_TYPE.FEATURE: 
                     isStoryTypeTaggable = config.feature_tagging;
@@ -39,11 +39,13 @@ class LabelUtil {
             }
     
             if (isStoryTypeTaggable && config.release_tagging) {
-                await PtUtil.updateStory(PTConstants.EVENT_TYPE.RELEASE, storyId, projectId, config.data.release_date);
+                console.log("tagging release");
+                await PtUtil.updateStory(PTConstants.EVENT_TYPE.RELEASE, storyId, projectId, config.release_date);
             } 
-            if (isStoryTypeTaggable && config.review_tagging) {
-                await PtUtil.updateStory(PTConstants.EVENT_TYPE.REVIEW, storyId, projectId, config.data.release_date);
-            }
+            // if (isStoryTypeTaggable && config.review_tagging) {
+            //     console.log("tagging review");
+            //     await PtUtil.updateStory(PTConstants.EVENT_TYPE.REVIEW, storyId, projectId, config.review_date);
+            // }
         }
     }
 }
