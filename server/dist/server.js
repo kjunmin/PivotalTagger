@@ -106,7 +106,7 @@ eval("__webpack_require__.r(__webpack_exports__);\nconst PTConstants = {\n  STOR
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\nconst Config = {\n  \"PG_DB_URL\": \"mserverdev.cskmchbf1fd8.ap-southeast-1.rds.amazonaws.com\",\n  \"DB_USER\": \"melonade\",\n  \"DB_PASS\": \"appiansucks\",\n  \"DB_PORT\": 5432,\n  \"DB_DEFAULT_DATABASE\": \"pt\",\n  \"PT_DEV_API_TOKEN\": \"7fd6b9475e68a6f74c2e4f376153959f\",\n  \"PT_API_TOKEN\": \"ec4c4203fae4b60860c466846e60c4bd\",\n  \"PT_BASE_URL\": \"https://www.pivotaltracker.com/services/v5\"\n};\n/* harmony default export */ __webpack_exports__[\"default\"] = (Config);\n\n//# sourceURL=webpack:///./src/constants/config.js?");
+eval("__webpack_require__.r(__webpack_exports__);\nconst Config = {\n  \"PG_DB_URL\": \"mserverdev.cskmchbf1fd8.ap-southeast-1.rds.amazonaws.com\",\n  \"DB_USER\": \"melonade\",\n  \"DB_PASS\": \"appiansucks\",\n  \"DB_PORT\": 5432,\n  \"DB_DEFAULT_DATABASE\": \"pt\",\n  \"PT_DEV_API_TOKEN\": \"7fd6b9475e68a6f74c2e4f376153959f\",\n  \"PT_API_TOKEN\": \"ec4c4203fae4b60860c466846e60c4bd\",\n  \"PT_BASE_URL\": \"https://www.pivotaltracker.com/services/v5\",\n  \"PROJECT_ID\": \"2345186\"\n};\n/* harmony default export */ __webpack_exports__[\"default\"] = (Config);\n\n//# sourceURL=webpack:///./src/constants/config.js?");
 
 /***/ }),
 
@@ -131,6 +131,18 @@ eval("__webpack_require__.r(__webpack_exports__);\nconst dbConstants = {\n  CONF
 
 "use strict";
 eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _db_databaseHandler__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../db/databaseHandler */ \"./src/db/databaseHandler.js\");\n\nconst ConfigController = {\n  async getConfiguration(req, res) {\n    const projectId = req.params.projectId;\n    const output = await _db_databaseHandler__WEBPACK_IMPORTED_MODULE_0__[\"default\"].getConfiguration(projectId);\n    res.send(output);\n  },\n\n  async saveConfiguration(req, res) {\n    const configJson = req.body;\n    console.log(configJson);\n    const output = await _db_databaseHandler__WEBPACK_IMPORTED_MODULE_0__[\"default\"].updateConfiguration(configJson);\n    const output2 = await _db_databaseHandler__WEBPACK_IMPORTED_MODULE_0__[\"default\"].saveHistory(configJson);\n    res.send(output);\n  }\n\n};\n/* harmony default export */ __webpack_exports__[\"default\"] = (ConfigController);\n\n//# sourceURL=webpack:///./src/controllers/ConfigController.js?");
+
+/***/ }),
+
+/***/ "./src/controllers/Scheduler.js":
+/*!**************************************!*\
+  !*** ./src/controllers/Scheduler.js ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var cron__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! cron */ \"cron\");\n/* harmony import */ var cron__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(cron__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _constants_config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../constants/config */ \"./src/constants/config.js\");\n/* harmony import */ var _db_databaseHandler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../db/databaseHandler */ \"./src/db/databaseHandler.js\");\n\n\n\nconst Scheduler = {\n  async startScheduler() {\n    const projectId = _constants_config__WEBPACK_IMPORTED_MODULE_1__[\"default\"].PROJECT_ID;\n    let sprintInfo = await _db_databaseHandler__WEBPACK_IMPORTED_MODULE_2__[\"default\"].getLatestSprintInfo(projectId); // let cronString = `4 * * * * *`;\n\n    let cronString = `0 0 * * *`;\n    console.log(cronString);\n    let CronJob = cron__WEBPACK_IMPORTED_MODULE_0___default.a.CronJob;\n    new CronJob(cronString, () => {\n      console.log(\"Starting Scheduler...\");\n      Scheduler.scheduleNewSprint(sprintInfo.data);\n    }, null, true, 'Asia/Singapore');\n  },\n\n  scheduleNewSprint(currentSprintInfo) {\n    if (Date.now() >= new Date(currentSprintInfo.reviewDate)) {\n      console.log(currentSprintInfo);\n      const newSprintNo = currentSprintInfo.sprint_no + 1;\n      let newSprintStartDate = new Date(currentSprintInfo.sprint_start_date);\n      newSprintStartDate.setDate(newSprintStartDate.getDate() + 14);\n      let newSprintReleaseDate = new Date(currentSprintInfo.release_date);\n      newSprintReleaseDate.setDate(newSprintReleaseDate.getDate() + 14);\n      let newSprintReviewDate = new Date(currentSprintInfo.review_date);\n      newSprintReviewDate.setDate(newSprintReviewDate.getDate() + 14);\n      let historyJson = {\n        sprintNo: newSprintNo,\n        projectId: currentSprintInfo.project_id,\n        sprintStartDate: newSprintStartDate,\n        releaseDate: newSprintReleaseDate,\n        reviewDate: newSprintReviewDate // db.updateHistory(historyJson)\n\n      };\n      console.log(historyJson);\n    }\n  }\n\n};\n/* harmony default export */ __webpack_exports__[\"default\"] = (Scheduler);\n\n//# sourceURL=webpack:///./src/controllers/Scheduler.js?");
 
 /***/ }),
 
@@ -190,7 +202,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _con
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! express */ \"express\");\n/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var body_parser__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! body-parser */ \"body-parser\");\n/* harmony import */ var body_parser__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(body_parser__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var babel_polyfill__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! babel-polyfill */ \"babel-polyfill\");\n/* harmony import */ var babel_polyfill__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(babel_polyfill__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./routes */ \"./src/routes.js\");\n/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! path */ \"path\");\n/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(path__WEBPACK_IMPORTED_MODULE_4__);\n\n\n\n\n\nconst app = express__WEBPACK_IMPORTED_MODULE_0___default()();\nconst port = process.env.PORT || 5000;\nconst staticPath = path__WEBPACK_IMPORTED_MODULE_4___default.a.join(__dirname, 'build');\napp.use(body_parser__WEBPACK_IMPORTED_MODULE_1___default.a.urlencoded({\n  extended: false\n}));\napp.use(body_parser__WEBPACK_IMPORTED_MODULE_1___default.a.json());\napp.use('/', express__WEBPACK_IMPORTED_MODULE_0___default.a.static(staticPath));\nObject(_routes__WEBPACK_IMPORTED_MODULE_3__[\"default\"])(app);\napp.listen(port, () => {\n  console.log(`Serving static files from ${staticPath}`);\n  console.log(`Listening on port ${port}`);\n});\n\n//# sourceURL=webpack:///./src/server.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! express */ \"express\");\n/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var body_parser__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! body-parser */ \"body-parser\");\n/* harmony import */ var body_parser__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(body_parser__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var babel_polyfill__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! babel-polyfill */ \"babel-polyfill\");\n/* harmony import */ var babel_polyfill__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(babel_polyfill__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./routes */ \"./src/routes.js\");\n/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! path */ \"path\");\n/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(path__WEBPACK_IMPORTED_MODULE_4__);\n/* harmony import */ var _controllers_Scheduler__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./controllers/Scheduler */ \"./src/controllers/Scheduler.js\");\n\n\n\n\n\n\nconst app = express__WEBPACK_IMPORTED_MODULE_0___default()();\nconst port = process.env.PORT || 5000;\nconst staticPath = path__WEBPACK_IMPORTED_MODULE_4___default.a.join(__dirname, 'build');\n_controllers_Scheduler__WEBPACK_IMPORTED_MODULE_5__[\"default\"].startScheduler();\napp.use(body_parser__WEBPACK_IMPORTED_MODULE_1___default.a.urlencoded({\n  extended: false\n}));\napp.use(body_parser__WEBPACK_IMPORTED_MODULE_1___default.a.json());\napp.use('/', express__WEBPACK_IMPORTED_MODULE_0___default.a.static(staticPath));\nObject(_routes__WEBPACK_IMPORTED_MODULE_3__[\"default\"])(app);\napp.listen(port, () => {\n  console.log(`Serving static files from ${staticPath}`);\n  console.log(`Listening on port ${port}`);\n});\n\n//# sourceURL=webpack:///./src/server.js?");
 
 /***/ }),
 
@@ -249,6 +261,17 @@ eval("module.exports = require(\"babel-polyfill\");\n\n//# sourceURL=webpack:///
 /***/ (function(module, exports) {
 
 eval("module.exports = require(\"body-parser\");\n\n//# sourceURL=webpack:///external_%22body-parser%22?");
+
+/***/ }),
+
+/***/ "cron":
+/*!***********************!*\
+  !*** external "cron" ***!
+  \***********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("module.exports = require(\"cron\");\n\n//# sourceURL=webpack:///external_%22cron%22?");
 
 /***/ }),
 

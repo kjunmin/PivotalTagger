@@ -7,7 +7,9 @@ const Config = {
 
     "PT_DEV_API_TOKEN": "7fd6b9475e68a6f74c2e4f376153959f",
     "PT_API_TOKEN": "ec4c4203fae4b60860c466846e60c4bd",
-    "PT_BASE_URL": "https://www.pivotaltracker.com/services/v5"
+    "PT_BASE_URL": "https://www.pivotaltracker.com/services/v5",
+
+    "PROJECT_ID": "2345186"
 }
 
 export default Config;

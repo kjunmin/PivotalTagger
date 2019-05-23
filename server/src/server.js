@@ -3,10 +3,13 @@ import bodyParser from 'body-parser';
 import 'babel-polyfill';
 import Routes from "./routes";
 import path from 'path';
+import Scheduler from './controllers/Scheduler';
 
 const app = express();
 const port = process.env.PORT || 5000;
 const staticPath = path.join(__dirname, 'build');
+
+Scheduler.startScheduler();
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
