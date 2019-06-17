@@ -39,8 +39,13 @@ class LabelUtil {
             }
     
             if (isStoryTypeTaggable && config.release_tagging) {
+
+                let tagDate = config.release_date;
+                if (Date.now() >=  new Date(tagDate)) {
+                    tagDate.setDate(tagDate.getDate() + 14);
+                }
                 console.log("tagging release");
-                await PtUtil.updateStory(PTConstants.EVENT_TYPE.RELEASE, storyId, projectId, config.release_date);
+                await PtUtil.updateStory(PTConstants.EVENT_TYPE.RELEASE, storyId, projectId, tagDate);
             } 
             // if (isStoryTypeTaggable && config.review_tagging) {
             //     console.log("tagging review");
