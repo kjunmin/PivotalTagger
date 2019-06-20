@@ -16,6 +16,13 @@ class TrackerController {
         res.send(output);
     }
 
+    async getSprint(req, res) {
+        const projectId = req.params.projectId;
+        const sprintNo = req.params.sprintNo;
+        let output = await db.getHistory(projectId, sprintNo);
+        res.send(output);
+    }
+
     async getConfigurations(req, res) {
         let projectId = req.params.projectId;
         let config = await db.getConfigurations(projectId);

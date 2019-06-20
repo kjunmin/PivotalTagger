@@ -17,6 +17,7 @@ const Routes = (app) => {
     app.get('/api/droptables', (req, res) => {dropAllTables; res.send("Tables dropped")});
     app.get('/api/createtables', (req, res) => {createAllTables; res.send("Tables created")});
     app.get('/api/getsprint/project/:projectId/', new TrackerController().getLatestSprint);
+    app.get('/api/getsprint/project/:projectId/sprint/:sprintNo', new TrackerController().getSprint);
 
     app.get('/api/project/:projectId/getconfig', new TrackerController().getConfigurations);
     // app.get('/api/getlabels/:projectId', new TrackerController().getLabelsInProject);
