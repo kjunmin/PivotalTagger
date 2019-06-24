@@ -1,6 +1,7 @@
 import ConfigController from "./controllers/ConfigController";
 import TrackerController from "./controllers/TrackerController";
 import { createAllTables, dropAllTables } from './db/dbCreateScripts';
+import path from 'path';
 
 const Routes = (app) => {
     app.use(function(req, res, next) {
@@ -25,6 +26,14 @@ const Routes = (app) => {
     app.get('/api/config/project/:projectId', ConfigController.getConfiguration);
     app.post('/api/updateconfig', ConfigController.saveConfiguration);
     app.post('/api/pt/hook', new TrackerController().onTrackerEvent);
+
+    app.get('/*', (req, res) => {
+        res.sendFile(path.join(__dirname, '/build/index.html'), err => {
+            if (err) {
+                res.status(500).send(err);
+            }
+        })
+    })
 }
 
 export default Routes;
