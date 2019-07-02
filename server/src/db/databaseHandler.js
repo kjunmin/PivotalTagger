@@ -29,7 +29,7 @@ const db = {
     },
 
     async updateHistory(historyJson) {
-        const queryText = `INSERT INTO public."${dbConstants.HISTORY_TABLE}"(sprint_no, project_id, sprint_start_date, release_date, review_date)
+        const queryText = `INSERT INTO ${dbConstants.HISTORY_TABLE} (sprint_no, project_id, sprint_start_date, release_date, review_date)
                             VALUES('${historyJson.sprintNo}', '${historyJson.projectId}', '${historyJson.sprintStartDate}', '${historyJson.releaseDate}', '${historyJson.reviewDate}')`
         const res = await pool.query(queryText);
         return { status: 1, text: "History Updated!", data: null };

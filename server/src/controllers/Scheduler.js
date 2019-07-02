@@ -7,8 +7,8 @@ const Scheduler = {
     async startScheduler() {
         const projectId = Config.PROJECT_ID;
         let sprintInfo = await db.getLatestSprintInfo(projectId);
-        // let cronString = `4 * * * * *`;
-        let cronString = `5 0 * * *`;
+        let cronString = `13 * * * * *`;
+        // let cronString = `5 0 * * *`;
         console.log(cronString);
         
         let CronJob = cron.CronJob;
@@ -20,7 +20,12 @@ const Scheduler = {
     },
 
     scheduleNewSprint(currentSprintInfo) {
-        if (Date.now() >=  new Date(currentSprintInfo.reviewDate)) {
+        const dateNowMillis = Date.now();
+        const dateReviewMillis = (new Date(currentSprintInfo.review_date)).getTime();
+
+        console.log(`millisnow: ${dateNowMillis} ... millisreview: ${dateReviewMillis}`);
+
+        if (dateNowMillis >=  dateReviewMillis) {
             const newSprintNo = currentSprintInfo.sprint_no + 1;
             let newSprintStartDate = new Date(currentSprintInfo.sprint_start_date);
             newSprintStartDate.setDate(newSprintStartDate.getDate() + 14);
