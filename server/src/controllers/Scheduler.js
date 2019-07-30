@@ -6,14 +6,15 @@ const Scheduler = {
 
     async startScheduler() {
         const projectId = Config.PROJECT_ID;
-        let sprintInfo = await db.getLatestSprintInfo(projectId);
-        let cronString = `13 * * * * *`;
-        // let cronString = `5 0 * * *`;
+        
+        // let cronString = `39 * * * * *`;
+        let cronString = `5 0 * * *`;
         console.log(cronString);
         
         let CronJob = cron.CronJob;
-        new CronJob(cronString, () => {
+        new CronJob(cronString, async () => {
             console.log("Starting Scheduler...");
+            let sprintInfo = await db.getLatestSprintInfo(projectId);
             console.log(sprintInfo.data);
             Scheduler.scheduleNewSprint(sprintInfo.data);
         }, null, true, 'Asia/Singapore');

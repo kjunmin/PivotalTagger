@@ -40,7 +40,6 @@ class TrackerController {
     async onTrackerEvent(req, res) {
         
         const storyJson = req.body;
-        
         const storyId = storyJson.primary_resources[0].id;
         const projectId = storyJson.project.id;
         let storyType = storyJson.primary_resources[0].story_type;

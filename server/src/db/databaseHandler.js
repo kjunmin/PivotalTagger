@@ -17,7 +17,7 @@ pool.on('connect', () => {
 
 const db = {
     async getLatestSprintInfo(projectId) {
-        const queryText = `SELECT * FROM ${dbConstants.HISTORY_TABLE} WHERE project_id = '${projectId}' ORDER BY sprint_no DESC;`;
+        const queryText = `SELECT * FROM ${dbConstants.HISTORY_TABLE} WHERE project_id = '${projectId}' ORDER BY sprint_no DESC LIMIT 1;`;
         const res = await pool.query(queryText);
         return { status: 1, text: "Data retrieved!", data: res.rows[0] };
     },
